@@ -1,16 +1,83 @@
 #include <iostream>
 #include <cstdlib>
+#include <string>
 
 struct pion{
     char couleur;
     int niv;
+    int equipe;
+};
+struct player{
     bool equipe;
+    std::string nom;
+    int np[3];
+    std::string couleur;
 };
 
+void setPlayerName(player &p1, player &p2, bool equipe){
+    std::string name;
+    for(int i=0; i<2; i++){
+        std::cout<<"nom joueur "<<equipe+1<<": \n";
+        std::cin>>name;
+        if(equipe){
+            p2.equipe=equipe;
+            p2.nom=name;
+        }else{
+            p1.equipe=equipe;
+            p1.nom=name;
+        }
+        equipe =true;
+    }
+}
+void setColorplayer(player &p, int chColor){
+    switch (chColor) {
+        case 1:
+            p.couleur="\033[31m";
+        break;
+        case 2:
+            p.couleur="\033[32m";
+        break;
+        case 3:
+            p.couleur="\033[33m";
+        break;
+        case 4:
+            p.couleur="\033[34m";
+        break;
+        case 5:
+            p.couleur="\033[35m";
+        break;
+        case 6:
+            p.couleur="\033[36m";
+        break;
+        default:
+            p.couleur="\033[0m";
+        break;
+    }
+}
+void selectColorPlayer(player &p1, player &p2){
+    int chColor=0;
+    for(int i=0; i<2; i++){
+        std::system("cls");
+        std::cout<<"0.Blanc\n1.\033[31mRouge\033[0m\n2.\033[32mVert\033[0m\n3.\033[33mJaune\033[0m\n";
+        std::cout<<"4.\033[34mBleu\033[0m\n5.\033[35mMagenta\033[0m\n6.\033[36mCyan\033[0m\n";
+        if (i==0)
+        {
+            std::cout<<p1.nom<<" quel couleur veux tu prendre ? :\n";
+            std::cin>>chColor;
+            setColorplayer(p1, chColor);
+        }else{
+            std::cout<<p2.nom<<" quel couleur veux tu prendre ? :\n";
+            std::cin>>chColor;
+            setColorplayer(p2, chColor);
+        }
+        std::system("cls");
+    } 
+}
 //demande à l'utilisateur la taille de la grille.
 void setTailleGrille(int &valeur){
     std::cout<<"taille du de la grille : ";
     std::cin>>valeur;
+    std::system("cls");
     if (valeur < 3){
         std::cout<<"taille trop petite: ";
         valeur = 3;
@@ -18,82 +85,130 @@ void setTailleGrille(int &valeur){
     std::cout<<"taille mis a "<<valeur<<std::endl;
     
 }
-void initialisation(int size, pion *tab[]){
+void initGrille(int size, pion *tab[]){
     for(int i=0; i<size; i++){
         tab[i]= new pion[size];
         for(int j=0; j<size; j++){
             tab[i][j].couleur = ' ';
             tab[i][j].niv = -1;
+            tab[i][j].equipe = 2;
+        }
+    }
+    
+}
+
+void givePoinPlayer(player &p, int npion[]){
+    for(int i=0; i<3; i++){
+        p.np[i]=npion[i];
+    }
+}
+
+void initPlayer(int Psize, player &p1, player &p2){
+    int npion[3];
+    for(int i=0; i<3; i++){
+        npion[i]=((Psize*(Psize+1))/2)/3;
+    }
+
+    if((((Psize*(Psize+1))/2)%3) != 0 ){
+        npion[0]+=1; 
+    }
+
+    for(int j=0; j<2; j++){
+        if(j==0){
+            givePoinPlayer(p1, npion);
+        }else{
+            givePoinPlayer(p2, npion);
         }
     }
 }
-void afficheGrille(pion *tab[], int size, bool equipe){
-    std::system("cls");
-
-    std::cout<<"tour de joueur "<<equipe<<std::endl;
+void afficheGrille(pion *tab[], int size, std::string color[]){
+    
+    std::cout<<"  ";
+    for(int o=0; o<size; o++){
+        if(o < 10){
+            std::cout<<"   "<<o;
+        }else{
+            std::cout<<"  "<<o;
+        }
+        
+    }
+    std::cout<<std::endl;
     for(int i=0; i<size; i++){
+        if(i > 9){
+            std::cout<<i;
+        }else{
+            std::cout<<i<<" ";
+        }
         for(int j=0; j<size; j++){
-            std::cout<<" | "<<tab[i][j].couleur;
+            std::cout<<" | "<<color[tab[i][j].equipe]<<tab[i][j].couleur<<"\033[0m";
         }
         std::cout<<" | "<<std::endl;
     }
 }
-void placerPiece(pion *tab[], int size, bool & equipe, int nivpion, int x, int y){
-    char colo[6] = {'x','%','X','o','0','O'};
-    
-    if(x > size){
-        x= x%size;
-    }else if (y > size){
-        y= y%size;
-    }
-
-    if(tab[y][x].niv < nivpion){
-        tab[y][x].niv=nivpion;
-        if(equipe){
-            tab[y][x].couleur=colo[nivpion];
-            tab[y][x].equipe=true;
-            equipe = false;
-        }else{
-            tab[y][x].couleur=colo[nivpion + 3];
-            tab[y][x].equipe=false;
-            equipe = true;
-        }
+void affichage(pion *tab[], int size, bool equipe, player p1, player p2){
+    std::string color[3]={p1.couleur, p2.couleur, "\033[0m"};
+    if(equipe){
+        std::cout<<"nombre de pion :\no "<<p2.np[0]<<" / 0 "<<p2.np[1]<<" / O "<<p2.np[2]<<std::endl;
+        std::cout<<"tour de "<<p2.couleur<<p2.nom<<"\033[0m :"<<std::endl;
     }else{
-        std::cout<<"TU ES FAIBLE\n";
+        std::cout<<"nombre de pion :\nx "<<p1.np[0]<<" / % "<<p1.np[1]<<" / X "<<p1.np[2]<<std::endl;
+        std::cout<<"tour de "<<p1.couleur<<p1.nom<<"\033[0m :"<<std::endl;
     }
-
+    afficheGrille(tab, size, color);
+    
 }
+
+
 void PlayAction(int & x, int & y, int & niv){
     std::cin.ignore();
-    std::cout<<"position x : ";
+    std::cout<<"position x y : ";
     std::cin>>x;
-    std::cout<<"position y : ";
     std::cin>>y;
     std::cout<<"niveaux du pion : ";
     std::cin>>niv;
+    std::system("cls");
 }
 
-
-
+void placerPiece(pion *tab[], int size, bool & equipe, player p1, player p2){
+    char colo[6] = {'x','%','X','o','0','O'};
+    int x, y, nivpion;
+    PlayAction(x, y, nivpion);
+    nivpion-- ;
+    if(x >= size || y > size || nivpion > 2){
+        std::cout<<"le pion ne peux pas etre posse\n";
+    }else{
+        if((tab[y][x].niv < nivpion)){
+            tab[y][x].niv=nivpion;
+            if(equipe){
+                tab[y][x].couleur=colo[nivpion];
+                tab[y][x].equipe=true;
+                
+                equipe = false;
+            }else{
+                tab[y][x].couleur=colo[nivpion + 3];
+                tab[y][x].equipe=false;
+                equipe = true;
+            }
+        }   
+    }
+}
 int main(){
-    int x, y, niv, equipeWin;
-
+    player p1, p2;
+    int equipeWin;
     bool equipe=false;
     int niveau[3]={0 , 1 , 2};
     // initier le tableaux avec une valeur de base de 3
-    int Psize = 3;
+    int Psize = 3, align =3;
+    setPlayerName(p1 , p2, equipe);
+    selectColorPlayer(p1, p2);
     setTailleGrille(Psize);
     pion *tab[Psize];
-    initialisation(Psize, tab);
+    initPlayer(Psize, p1, p2);
+    initGrille(Psize, tab);
 
-
-    afficheGrille(tab, Psize, equipe);
-    PlayAction(x, y, niv);
-    placerPiece(tab, Psize, equipe, niv, x, y);
-    for(int i=0; i<10; i++){
-        afficheGrille(tab, Psize, equipe);
-        PlayAction(x, y, niv);
-        placerPiece(tab, Psize, equipe, niv, x, y);
+    for(int i=0; (i< (Psize*(Psize+1))); i++){
+        affichage(tab, Psize, equipe, p1, p2);
+        placerPiece(tab, Psize, equipe, p1, p2);
     }
     
 
