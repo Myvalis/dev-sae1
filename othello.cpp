@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 
 void initTab(char tab[],int nb){
 	for(int i=0;i<nb*nb;i++){
@@ -91,7 +92,7 @@ void cascade(char tab[],int nb,int ipion,char symbole){
 			}
 		}
 	}
-	if((ipion+9<nb*nb)and(ipion%8!=0)and(tab[ipion+9]!=symbole)){
+	if((ipion+9<nb*nb)and(tab[ipion+9]!=symbole)){
 		for(int i=ipion+9;(i<nb*nb)and(tab[i]!='.');i+=9){
 			if(tab[i]==symbole){
 				retourneDiagonaleGD(tab,ipion,i,symbole);
