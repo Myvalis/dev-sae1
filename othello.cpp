@@ -160,55 +160,7 @@ bool adjacence(char tab[],int nb,int ipion,char symbole){
 	}
 	return false;
 }
-/*
-bool adjacence(char tab[],int nb,int ipion,char symbole){
-	//prend en parametre le tableau,sa taille,l'indice du pion et sa couleur
-	//retourne si le pion est adjacent à un pion d'une autre couleur
-	//verifie toute la ligne à droite du pion, s'arrete à case vide ou à multiple de nb
-	for(int i=ipion+1;(i%nb!=0)and(tab[i]!='.');i++){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}
-	//verifie toute la ligne à gauche du pion, s'arrete à case vide ou à multiple de nb-1
-	for(int i=ipion-1;((i-1)%nb!=0)and(tab[i]!='.');i--){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}
-	for(int i=ipion+8;(i<=nb*nb)and(tab[i]!='.');i+=8){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}
-	for(int i=ipion-8;(i<=nb*nb)and(tab[i]!='.');i-=8){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}
-	for(int i=ipion+9;(i<=nb*nb)and(tab[i]!='.');i+=9){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}
-	for(int i=ipion-9;(i<=nb*nb)and(tab[i]!='.');i-=9){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}	
-	for(int i=ipion+7;(i<=nb*nb)and(tab[i]!='.');i+=7){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}
-	for(int i=ipion-7;(i<=nb*nb)and(tab[i]!='.');i-=7){
-		if(tab[i]==symbole){
-			return true;
-		}
-	}	
-	return false;
-}
-*/
+
 void ecriture(char tab[],int ipion,char symbole){
 	//Formule pour obtenir l'indice de tableau à partir des coordonnées
 	//(y-1)*nb+(x-1)
