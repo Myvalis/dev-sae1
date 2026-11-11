@@ -194,6 +194,7 @@ void victoire(char tab[],int nb){
 			O++;
 		}
 	}
+	std::cout<<"X:"<<X<<" O:"<<O<<std::endl;
 	if(X<O){
 		std::cout<<"Les X ont gagne";
 	}else{
