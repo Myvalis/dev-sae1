@@ -2,18 +2,64 @@
 #include <cstdlib>
 #include <string>
 
+/*--- Struct ---*/
+//information sur les pion
 struct pion{
     char couleur;
     int niv;
     int equipe;
 };
+//information sur les joueur
 struct player{
     bool equipe;
     std::string nom;
-    int np[3];
+    int np[3]; int win = 0;
     std::string couleur;
+    
 };
 
+/*--- Initialisation du jeux---*/
+//demande à l'utilisateur la taille de la grille.
+void setTailleGrille(int &valeur){
+    std::cout<<"taille du de la grille : ";
+    std::cin>>valeur;
+    std::system("cls");
+    if (valeur < 2){
+        std::cout<<"taille trop petite: ";
+        valeur = 2;
+    }
+    std::cout<<"taille mis a "<<valeur<<std::endl;
+    
+}
+//initier la grille
+void initGrille(int size, pion *tab[]){
+    for(int i=0; i<size; i++){
+        tab[i]= new pion[size];
+        for(int j=0; j<size; j++){
+            tab[i][j].couleur = ' ';
+            tab[i][j].niv = -1;
+            tab[i][j].equipe = 2;
+        }
+    }
+    
+}
+//modifier le nombre de pièece aligner pour gagnierr
+void setAlign(int &align, int Psize){
+    std::cout<<"combien de piont faut-il alignier : ";
+    std::cin>>align;
+    std::system("cls");
+    if (align < 2){
+        std::cout<<"l'alignement trop petite: ";
+        align = 2;
+    }else if(align > Psize){
+        std::cout<<"alignement est plus grande que le plateaux\n";
+        setAlign(align, Psize);
+    }
+    std::cout<<"l'alignement mis a "<<align<<std::endl;
+}
+
+/*--- Initialisation des joueurs ---*/
+//assigner un nom
 void setPlayerName(player &p1, player &p2, bool equipe){
     std::string name;
     for(int i=0; i<2; i++){
@@ -29,6 +75,7 @@ void setPlayerName(player &p1, player &p2, bool equipe){
         equipe =true;
     }
 }
+//assigner une couleurs
 void setColorplayer(player &p, int chColor){
     switch (chColor) {
         case 1:
@@ -54,6 +101,7 @@ void setColorplayer(player &p, int chColor){
         break;
     }
 }
+//choix de la couleurs
 void selectColorPlayer(player &p1, player &p2){
     int chColor=0;
     for(int i=0; i<2; i++){
@@ -73,54 +121,27 @@ void selectColorPlayer(player &p1, player &p2){
         std::system("cls");
     } 
 }
-//demande à l'utilisateur la taille de la grille.
-void setTailleGrille(int &valeur){
-    std::cout<<"taille du de la grille : ";
-    std::cin>>valeur;
-    std::system("cls");
-    if (valeur < 2){
-        std::cout<<"taille trop petite: ";
-        valeur = 2;
-    }
-    std::cout<<"taille mis a "<<valeur<<std::endl;
-    
-}
-void initGrille(int size, pion *tab[]){
-    for(int i=0; i<size; i++){
-        tab[i]= new pion[size];
-        for(int j=0; j<size; j++){
-            tab[i][j].couleur = ' ';
-            tab[i][j].niv = -1;
-            tab[i][j].equipe = 2;
-        }
-    }
-    
-}
-
-void givePoinPlayer(player &p, int npion[]){
-    for(int i=0; i<3; i++){
-        p.np[i]=npion[i];
-    }
-}
-
+//donner les pions au joueur
 void initPlayer(int Psize, player &p1, player &p2){
     int npion[3];
+
+    //repartir les pions equitablement.
     for(int i=0; i<3; i++){
         npion[i]=((Psize*(Psize+1))/2)/3;
     }
-
+    //rajouer le piont en trop dans le plus faible.
     if((((Psize*(Psize+1))/2)%3) != 0 ){
         npion[0]+=1; 
     }
-
-    for(int j=0; j<2; j++){
-        if(j==0){
-            givePoinPlayer(p1, npion);
-        }else{
-            givePoinPlayer(p2, npion);
-        }
+    // donner les pion au joueur.
+    for(int i=0; i<3; i++){
+        p1.np[i]=npion[i];
+        p2.np[i]=npion[i];
     }
 }
+
+/*--- Affichage du jeux ---*/
+//afficher la grille
 void afficheGrille(pion *tab[], int size, std::string color[]){
     
     std::cout<<"  ";
@@ -130,9 +151,7 @@ void afficheGrille(pion *tab[], int size, std::string color[]){
         }else{
             std::cout<<"  "<<o;
         }
-        
-    }
-    std::cout<<std::endl;
+    }std::cout<<std::endl;
     for(int i=0; i<size; i++){
         if(i > 9){
             std::cout<<i;
@@ -145,6 +164,7 @@ void afficheGrille(pion *tab[], int size, std::string color[]){
         std::cout<<" | "<<std::endl;
     }
 }
+//afficher l'information de chaque joueur
 void affichage(pion *tab[], int size, bool equipe, player p1, player p2){
     std::string color[3]={p1.couleur, p2.couleur, "\033[0m"};
     if(equipe){
@@ -158,18 +178,9 @@ void affichage(pion *tab[], int size, bool equipe, player p1, player p2){
     afficheGrille(tab, size, color);
     
 }
-bool matchNull(player p1, player p2){
-    bool null=false;
-    for(int i=0; i<3; i++){
-        if (p1.np[i] == 0 && p2.np[i]){
-            null=true;
-        }else{
-            null=false;
-        }
-    }
-    return null;
-}
 
+/*--- Gerer l'action de jeux ---*/
+//saisit du joueur
 void PlayAction(int & x, int & y, int & niv){
     std::cin.ignore();
     std::cout<<"position x : ";
@@ -180,6 +191,7 @@ void PlayAction(int & x, int & y, int & niv){
     std::cin>>niv;
     std::system("cls");
 }
+//vérifier si le joueur à encore le pion qui veux poser
 bool restpiece(player p1, player p2, int nivpion, bool equipe){
     if(equipe){
         return p2.np[nivpion] <= 0;
@@ -188,11 +200,12 @@ bool restpiece(player p1, player p2, int nivpion, bool equipe){
     }
     
 }
+//placer une pièce sur le plateau
 void placerPiece(pion *tab[], int size, bool & equipe, player &p1, player &p2){
     char colo[6] = {'x','%','X','o','0','O'};
     int x, y, nivpion;
     PlayAction(x, y, nivpion);
-    nivpion--;
+    nivpion -= 1;
     if(x >= size || y > size || nivpion > 2 || restpiece(p1, p2, nivpion, equipe)){
         std::cout<<"le pion ne peux pas etre posse\n";
     }else{
@@ -212,22 +225,57 @@ void placerPiece(pion *tab[], int size, bool & equipe, player &p1, player &p2){
         }   
     }
 }
+
+ /*-- Detection de victoire---*/
+//detecter si la partie est est en Match Null
+bool matchNull(player p1, player p2){
+    bool null=false;
+    for(int i=0; i<3; i++){
+        if (p1.np[i] == 0 && p2.np[i] == 0){
+            null=true;
+        }else{
+            null=false;
+        }
+    }
+    return null;
+}
+//detecter si un des deux joueurs on alignier asser de point
+bool victoire(int psize, pion *tab[], int aligne, bool &equipeWin){
+
+}
+//verifie si une des deux condition de fin de partie est vrais
+bool fin2Parti(player p1, player p2, int psize, pion *tab[], int aligne, bool &equipeWin){
+    bool fin = false;
+    if(matchNull(p1, p2)){
+        fin = true;
+         std::cout<<"Match Null\n";
+    }else{
+        fin = false;
+    }
+
+    return fin;
+}
+
 int main(){
     player p1, p2;
-    int equipeWin;
+    bool equipeWin;
     bool equipe=false;
-    int niveau[3]={0 , 1 , 2};
     // initier le tableaux avec une valeur de base de 2
     int Psize = 2, align =2;
-    std::cout<<3/3;
+
+    /*--- Initialisation du jeux---*/
+    setTailleGrille(Psize);
+    setAlign(align, Psize);
+    pion *tab[Psize];
+    initGrille(Psize, tab);
+    
+    /*--- Initialisation des joueurs ---*/
     setPlayerName(p1 , p2, equipe);
     selectColorPlayer(p1, p2);
-    setTailleGrille(Psize);
-    pion *tab[Psize];
     initPlayer(Psize, p1, p2);
-    initGrille(Psize, tab);
+    
 
-    while (!matchNull(p1, p2)){
+    while (!fin2Parti(p1, p2, Psize, tab, align, equipeWin)){
         affichage(tab, Psize, equipe, p1, p2);
         placerPiece(tab, Psize, equipe, p1, p2);
     }
