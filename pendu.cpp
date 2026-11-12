@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <string.h>
+
 
 std::string trouverMot(){
     std::ifstream fichier("C:/Users/Rebec/Documents/GitHub/dev-sae1/mots.txt");
