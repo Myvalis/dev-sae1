@@ -3,9 +3,9 @@
 
 void initTab(char tab[],int nb){
 	for(int i=0;i<nb*nb;i++){
-		if((i==28)or(i==35)){
+		if((i==28)||(i==35)){
 			tab[i]='X';
-		}else if((i==27)or(i==36)){
+		}else if((i==27)||(i==36)){
 			tab[i]='O';
 		}else{
 			tab[i]='.';
@@ -58,66 +58,66 @@ void cascade(char tab[],int nb,int ipion,char symbole){
 	//prend en parametre le tableau,sa taille et l'indice et le symbole du dernier pion joué
 	//et retourne(dans le sens change de sens) les cases à retourner
 	//on verifie la case adjacente 
-	if((ipion+1<nb*nb)and(tab[ipion+1]!=symbole)){
+	if((ipion+1<nb*nb)&&(tab[ipion+1]!=symbole)){
 		//verifie toute la ligne à droite du pion, s'arrete à case vide ou à multiple de nb
-		for(int i=ipion+1;(i%nb!=0)and(tab[i]!='.');i++){
+		for(int i=ipion+1;(i%nb!=0)&&(tab[i]!='.');i++){
 			if(tab[i]==symbole){
 				retourneLigne(tab,ipion,i,symbole);
 				break;
 			}
 		}
 	}
-	if((ipion-1>=0)and(tab[ipion-1]!=symbole)){
+	if((ipion-1>=0)&&(tab[ipion-1]!=symbole)){
 		//verifie toute la ligne à gauche du pion, s'arrete à case vide ou à multiple de nb-1
-		for(int i=ipion-1;((i+1)%nb!=0)and(tab[i]!='.');i--){
+		for(int i=ipion-1;((i+1)%nb!=0)&&(tab[i]!='.');i--){
 			if(tab[i]==symbole){
 				retourneLigne(tab,i,ipion,symbole);
 				break;
 			}
 		}
 	}
-	if((ipion+8<nb*nb)and(tab[ipion+8]!=symbole)){
-		for(int i=ipion+8;(i<nb*nb)and(tab[i]!='.');i+=8){
+	if((ipion+8<nb*nb)&&(tab[ipion+8]!=symbole)){
+		for(int i=ipion+8;(i<nb*nb)&&(tab[i]!='.');i+=8){
 			if(tab[i]==symbole){
 				retourneColonne(tab,ipion,i,symbole);
 				break;
 			}
 		}
 	}
-	if((ipion-8>=0)and(tab[ipion-8]!=symbole)){
-		for(int i=ipion-8;(i>=0)and(i<nb*nb)and(tab[i]!='.');i-=8){
+	if((ipion-8>=0)&&(tab[ipion-8]!=symbole)){
+		for(int i=ipion-8;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=8){
 			if(tab[i]==symbole){
 				retourneColonne(tab,i,ipion,symbole);
 				break;
 			}
 		}
 	}
-	if((ipion+9<nb*nb)and(tab[ipion+9]!=symbole)){
-		for(int i=ipion+9;(i<nb*nb)and(tab[i]!='.');i+=9){
+	if((ipion+9<nb*nb)&&(tab[ipion+9]!=symbole)){
+		for(int i=ipion+9;(i<nb*nb)&&(tab[i]!='.');i+=9){
 			if(tab[i]==symbole){
 				retourneDiagonaleGD(tab,ipion,i,symbole);
 				break;
 			}
 		}
 	}
-	if((ipion-9>=0)and(tab[ipion-9]!=symbole)){
-		for(int i=ipion-9;(i>=0)and(i<nb*nb)and(tab[i]!='.');i-=9){
+	if((ipion-9>=0)&&(tab[ipion-9]!=symbole)){
+		for(int i=ipion-9;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=9){
 			if(tab[i]==symbole){
 				retourneDiagonaleGD(tab,i,ipion,symbole);
 				break;
 			}
 		}
 	}
-	if((ipion+7<nb*nb)and(tab[ipion+7]!=symbole)){
-		for(int i=ipion+7;(i<nb*nb)and(tab[i]!='.');i+=7){
+	if((ipion+7<nb*nb)&&(tab[ipion+7]!=symbole)){
+		for(int i=ipion+7;(i<nb*nb)&&(tab[i]!='.');i+=7){
 			if(tab[i]==symbole){
 				retourneDiagonaleDG(tab,ipion,i,symbole);
 				break;
 			}
 		}
 	}
-	if((ipion-7>=0)and(tab[ipion-7]!=symbole)){
-		for(int i=ipion-7;(i>=0)and(i<nb*nb)and(tab[i]!='.');i-=7){
+	if((ipion-7>=0)&&(tab[ipion-7]!=symbole)){
+		for(int i=ipion-7;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=7){
 			if(tab[i]==symbole){
 				retourneDiagonaleDG(tab,i,ipion,symbole);
 				break;
@@ -143,7 +143,7 @@ bool adjacence(char tab[],int nb,int ipion,char symbole){
 			if(dcol<0){
 				dcol=-dcol;
 			}
-			if((suivant<0)or(suivant>=nb*nb)or(dcol>1)){
+			if((suivant<0)||(suivant>=nb*nb)||(dcol>1)){
 				break;
 			}
 			i=suivant;
@@ -195,7 +195,7 @@ void victoire(char tab[],int nb){
 		}
 	}
 	std::cout<<"X:"<<X<<" O:"<<O<<std::endl;
-	if(X<O){
+	if(X>O){
 		std::cout<<"Les X ont gagne";
 	}else{
 		std::cout<<"Les O ont gagne";
@@ -204,7 +204,7 @@ void victoire(char tab[],int nb){
 
 bool jeuPossible(char tab[],int nb,char symbole){
 	bool possible=false;
-	for(int i=0;(i<nb*nb)and(possible==false);i++){
+	for(int i=0;(i<nb*nb)&&(possible==false);i++){
 		possible=adjacence(tab,nb,i,symbole);
 	}
 	return possible;
@@ -231,7 +231,7 @@ int main(){
 		ipion=(y-1)*nb+(x-1);
 		if(jeuPossible(tab,nb,currentchar)){
 			if(x>=1 && x<=nb && y>=1 && y<=nb){
-			if((adjacence(tab,nb,ipion,currentchar))and(tab[ipion]=='.')){
+			if((adjacence(tab,nb,ipion,currentchar))&&(tab[ipion]=='.')){
 				ecriture(tab,ipion,currentchar);
 				cascade(tab,nb,ipion,currentchar);
 				alternance(currentchar);
@@ -248,7 +248,7 @@ int main(){
 			}
 		}
 		fin=veriFin(tab,nb);
-		if((x==67)and(y==69)){
+		if((x==67)&&(y==69)){
 			fin=true;
 		}
 	}
