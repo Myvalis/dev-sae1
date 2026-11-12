@@ -9,12 +9,13 @@ https://gist.github.com/chrishorton/8510732aa9a80a03c829b09f12e20d9c
 */
 
 std::string trouverMot(){
-    std::ifstream fichier("mots.txt");
+    std::ifstream fichier("C:/Users/Rebec/Documents/GitHub/dev-sae1/mots.txt");
     if (fichier.is_open()) {
+        int taille;
         std::string ligne;
         // Lecture ligne par ligne jusqu'Ã  la fin du fichier
         while (std::getline(fichier, ligne)) {
-            //std::cout << ligne << '\n';
+            std::cout << ligne << '\n';
         }
         fichier.close(); // Fermeture du fichier
     } else {
@@ -62,7 +63,7 @@ int main() {
     initCurrent(mot,currentmot);
     bool fin=false;
     while(fin!=true){
-        std::system("cls");
+        //std::system("cls");
         std::cout<<HANGMANPICS[pendu]<<std::endl;
         std::cout<<currentmot<<std::endl;
         std::cout<<"Donne une lettre"<<std::endl;
