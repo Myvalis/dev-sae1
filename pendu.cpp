@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <ctime>
 
 /*
 lien ou j'ai piqué le bonhomme baton:
@@ -9,19 +10,29 @@ https://gist.github.com/chrishorton/8510732aa9a80a03c829b09f12e20d9c
 */
 
 std::string trouverMot(){
+    srand(time(0));
     std::ifstream fichier("C:/Users/Rebec/Documents/GitHub/dev-sae1/mots.txt");
     if (fichier.is_open()) {
-        int taille;
+        int t=0,i=0;
         std::string ligne;
-        // Lecture ligne par ligne jusqu'Ã  la fin du fichier
+        // Lecture ligne par ligne jusqu'à  la fin du fichier
         while (std::getline(fichier, ligne)) {
-            std::cout << ligne << '\n';
+           t++;
+        }
+        std::string mots[t];
+        fichier.clear();                 // Efface l'état d'erreur (EOF)
+        fichier.seekg(0, std::ios::beg); // Replace le curseur à la position 0
+
+        while (std::getline(fichier, ligne)) {
+           mots[i]=ligne;
+           i++;
         }
         fichier.close(); // Fermeture du fichier
+        return mots[std::rand() % t];
     } else {
         std::cerr << "Impossible d'ouvrir le fichier en lecture." << std::endl;
     }
-    return "machin";
+    return "abricot";
 }
 
 void initCurrent(std::string mot,std::string &currentMot){
@@ -63,7 +74,7 @@ int main() {
     initCurrent(mot,currentmot);
     bool fin=false;
     while(fin!=true){
-        //std::system("cls");
+        std::system("cls");
         std::cout<<HANGMANPICS[pendu]<<std::endl;
         std::cout<<currentmot<<std::endl;
         std::cout<<"Donne une lettre"<<std::endl;
