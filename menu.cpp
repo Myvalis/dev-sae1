@@ -75,7 +75,12 @@ void PlayerColor(importPlayer &p1, importPlayer &p2){
         std::system("cls");
     } 
 }
-
+void replay(int action, std::string jeux){
+    std::string executable="\""+jeux+"\"";
+    if(action == 1){
+        system(executable.c_str());
+    }
+}
 void saisit(char & choix){
     std::cout<<"que voulez vous faire: ";
     std::cin>>choix;
@@ -127,7 +132,7 @@ void action(int & page, char & choix, importPlayer &p1, importPlayer &p2){
     if(page == 0){
         switch (choix) {
             case '1':
-                system("EmmTest.exe");
+                replay(system("EmmTest.exe"), "EmmTest.exe");
             break;
             case '2':
                 system("EmmTest.exe");
@@ -139,7 +144,7 @@ void action(int & page, char & choix, importPlayer &p1, importPlayer &p2){
                 system("EmmTest.exe");
             break;
             case '5':
-                system("wordle.exe");
+                replay(system("wordle.exe"), "wordle.exe");
             break;
             case 'p':
                 page = 1;

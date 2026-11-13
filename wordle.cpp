@@ -136,6 +136,25 @@ bool win(std::string motJoueur, std::string MotCacher, int sizeMot){
     }
     return true;
 }
+int fin2Party(int sizeMot, Historique Historique[], int essaie, bool Win, std::string MotCacher){
+    affichage(sizeMot, Historique, essaie);
+    int retour =3;
+    if(Win){
+        std::cout<<"FELICITATION :D Tu a Trouver le mot en "<<essaie<<" essaie\n";
+    }else{
+        std::cout<<"DOMAGE :C le mot a trouver etais "<<MotCacher<<std::endl;
+    }
+
+    std::cout<<"Rejouer ?\n1- oui\n0- non \n";
+    std::cin>>retour;
+    
+    if(retour != 1){
+        retour = 0;
+    }
+    std::system("cls");
+    return retour;
+
+}
 int main() {
     std::string MotCacher = genererMot();
     int sizeMot = MotCacher.length(),essaie = 0, bienPlacer[sizeMot], nombreLettre[26];
@@ -154,16 +173,5 @@ int main() {
         occurence(MotCacher, sizeMot, nombreLettre);
         placeLettre(MotCacher, essaie, sizeMot, Historique, nombreLettre);
     }
-    affichage(sizeMot, Historique, essaie);
-    if(Win){
-        std::cout<<"FELICITATION :D Tu a Trouver le mot en "<<essaie<<" essaie";
-    }else{
-        std::cout<<"DOMAGE :C le mot a trouver etais "<<MotCacher;
-    }
-
-
-    
-    
-
-    return 0;
+    return fin2Party(sizeMot, Historique, essaie, Win, MotCacher);
 }
