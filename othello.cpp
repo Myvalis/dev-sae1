@@ -13,7 +13,6 @@ void initTab(char tab[],int nb){
 	}
 }
 
- 
 void affichageTab(char tab[],int nb){
 	//la marge
 	std::cout<<"  ";
@@ -23,7 +22,7 @@ void affichageTab(char tab[],int nb){
 	for(int i=0;i<nb*nb;i++){
 		if((i)%nb==0){
 			std::cout<<std::endl;
-			//affichage des numéros de collonne
+			//affichage des numéros de colonne
 			std::cout<<(i/nb+1)<<' ';
 		}
 		std::cout<<tab[i]<<' ';
