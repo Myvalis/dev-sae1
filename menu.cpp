@@ -1,10 +1,11 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "infoPlayer.h"
+#include "tic_tac_toe_stack.h"
+#include "othello.h"
 
-struct importPlayer{
-    std::string Name="", Color="";
-};
+/****   créé par Emma    ****/
 
 std::string texteRGB(int r, int g, int b) {
     return "\033[38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m";
@@ -15,7 +16,7 @@ std::string fondRGB(int r, int g, int b) {
     return "\033[48;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m";
 }
 
-void PlayerName(importPlayer &p1, importPlayer &p2){
+void PlayerName(Player &p1, Player &p2){
     std::string nom;
 
     std::system("cls");
@@ -23,63 +24,50 @@ void PlayerName(importPlayer &p1, importPlayer &p2){
         std::cout<<"nom joueur "<<i+1<<": \n";
         std::cin>>nom;
         if(i == 1){
-            p2.Name=nom;
+            p2.pseudo=nom;
         }else{
-            p1.Name=nom;
+            p1.pseudo=nom;
         }
     }
 }
-//assigner une couleurs
-void setColorplayer(importPlayer &p, int chColor){
-    switch (chColor) {
-        case 1:
-            p.Color="\033[31m";
-        break;
-        case 2:
-            p.Color="\033[32m";
-        break;
-        case 3:
-            p.Color="\033[33m";
-        break;
-        case 4:
-            p.Color="\033[34m";
-        break;
-        case 5:
-            p.Color="\033[35m";
-        break;
-        case 6:
-            p.Color="\033[36m";
-        break;
-        default:
-            p.Color="\033[0m";
-        break;
-    }
+void defaultPlayer(Player &p1, Player &p2){
+    p1.pseudo="Joueur 1";
+    p1.color="\033[31m";
+    p2.pseudo="Joueur 2";
+    p2.color="\033[34m";
 }
+void resetScore(Player &p1, Player &p2){
+    p1.win=0;
+    p2.win=0;
+}
+
 //choix de la couleurs
-void PlayerColor(importPlayer &p1, importPlayer &p2){
-    int chColor=0;
+void PlayerColor(Player &p1, Player &p2){
+    int r=255, g=255, b=255;
     for(int i=0; i<2; i++){
         std::system("cls");
-        std::cout<<"0.Blanc\n1.\033[31mRouge\033[0m\n2.\033[32mVert\033[0m\n3.\033[33mJaune\033[0m\n";
-        std::cout<<"4.\033[34mBleu\033[0m\n5.\033[35mMagenta\033[0m\n6.\033[36mCyan\033[0m\n";
+        std::cout<<"| "<<texteRGB(239,68,68)<<"[239  68  68]\033[0m | "<<texteRGB(249,115,22)<<"[249 115  22]\033[0m | "<<texteRGB(250,204,21)<<"[250 204  21]\033[0m | "<<texteRGB(250,250,250)<<"[250 250 250]\033[0m |\n";
+        std::cout<<"| "<<texteRGB(132,204,22)<<"[132 204  22]\033[0m | "<<texteRGB(34,197,94)<<"[ 34 197  94]\033[0m | "<<texteRGB(6,182,212)<<"[  6 182 212]\033[0m | "<<texteRGB(156,163,175)<<"[156 163 175]\033[0m |\n";
+        std::cout<<"| "<<texteRGB(59,130,246)<<"[ 59 130 246]\033[0m | "<<texteRGB(139,92,246)<<"[139  92 246]\033[0m | "<<texteRGB(217,70,239)<<"[217  70 239]\033[0m | "<<texteRGB(55,65,81)<<"[ 55  65  81]\033[0m |\n"<<std::endl;;
+        
         if (i==0)
         {
-            std::cout<<p1.Name<<" quel couleur veux tu prendre ? :\n";
-            std::cin>>chColor;
-            setColorplayer(p1, chColor);
+            
+            std::cout<<p1.pseudo<<" quel couleur veux tu prendre ? (r g b) :";
+            std::cin>>r;
+            std::cin>>g;
+            std::cin>>b;
+            
+            p1.color=texteRGB(r,g,b);
         }else{
-            std::cout<<p2.Name<<" quel couleur veux tu prendre ? :\n";
-            std::cin>>chColor;
-            setColorplayer(p2, chColor);
+            std::cout<<p2.pseudo<<" quel couleur veux tu prendre ? (r g b) :";
+            std::cin>>r;
+            std::cin>>g;
+            std::cin>>b;
+            p2.color=texteRGB(r,g,b);
         }
         std::system("cls");
     } 
-}
-void replay(int action, std::string jeux){
-    std::string executable="\""+jeux+"\"";
-    if(action == 1){
-        system(executable.c_str());
-    }
 }
 void saisit(char & choix){
     std::cout<<"que voulez vous faire: ";
@@ -108,7 +96,7 @@ void affichage(int page){
         std::cout<<"|\033[31mQ- Quitter            \033[0m|\n";
         std::cout<<"+-+==================+-+\n";
         std::cout<<"+----------------------+\n";
-    }else{
+    }else if(page == 1){
         std::cout<<"\033[33m@- IUT GAME 2026-2027 -@\033[0m\n";
         std::cout<<"+----------------------+\n";
         std::cout<<"+-+=====- Menu -=====+-+\n";
@@ -116,6 +104,9 @@ void affichage(int page){
         std::cout<<"|                      |\n";
         std::cout<<"|"<<texteRGB(119, 181, 254)<<"1- Noms Joueurs\033[0m       |\n";
         std::cout<<"|"<<texteRGB(119, 181, 254)<<"2- Couleurs Joueurs\033[0m   |\n";
+        std::cout<<"|"<<texteRGB(119, 181, 254)<<"3- Score Joueurs\033[0m      |\n";
+        std::cout<<"|                      |\n";
+        std::cout<<"|"<<texteRGB(119, 181, 254)<<"4- Reset Scores\033[0m       |\n";
         std::cout<<"|                      |\n";
         std::cout<<"+--   \033[32mAutre action\033[0m   --+\n";
         std::cout<<"|                      |\n";
@@ -125,26 +116,25 @@ void affichage(int page){
         std::cout<<"+----------------------+\n";
     }
 }
-void action(int & page, char & choix, importPlayer &p1, importPlayer &p2){
+void action(int & page, char & choix, Player &p1, Player &p2){
     
     saisit(choix);
 
     if(page == 0){
         switch (choix) {
             case '1':
-                replay(system("EmmTest.exe"), "EmmTest.exe");
+                ticTacToeStack(p1, p2);
             break;
             case '2':
-                system("EmmTest.exe");
+                othello(p1, p2);
             break;
             case '3':
-                system("EmmTest.exe");
             break;
             case '4':
-                system("EmmTest.exe");
+                system("pendu.exe");
             break;
             case '5':
-                replay(system("wordle.exe"), "wordle.exe");
+                system("wordle.exe");
             break;
             case 'p':
                 page = 1;
@@ -164,6 +154,13 @@ void action(int & page, char & choix, importPlayer &p1, importPlayer &p2){
             case '2':
                 PlayerColor(p1, p2);
             break;
+            case '3':
+                std::cout<<p1.color<<p1.pseudo<<"\033[0m a gagne.e "<<p1.win<<" fois\n";
+                std::cout<<p2.color<<p2.pseudo<<"\033[0m a gagne.e "<<p2.win<<" fois\n\n";
+            break;
+            case '4':
+                resetScore(p1, p2);
+            break;
             case 'r':
                 page = 0;
             break;
@@ -176,12 +173,12 @@ void action(int & page, char & choix, importPlayer &p1, importPlayer &p2){
         }
     }
 }
+
 int main(){
     char choix='0';
     int page=0;
-    importPlayer p1, p2;
-
-    
+    Player p1, p2;
+    defaultPlayer(p1, p2);
 
     while(choix !='Q'){
         affichage(page);

@@ -3,9 +3,13 @@
 #include <ctime>
 #include <fstream>
 #include <string>
+
+/****   créé par Emma    ****/
+
+
 struct Historique{
     std::string mot="";
-    int postion[20];
+    int postion[5];
 };
 
 std::string fondRGB(int r, int g, int b) {
@@ -17,7 +21,7 @@ std::string genererMot(){
     int sizeListMot = 0;
 
     std::srand(std::time(nullptr));
-    std::fstream fichier("./MotsEn5Lettre.txt");
+    std::fstream fichier("./listMots/MotsEn5Lettre.txt");
     if(fichier.is_open()){
         while(std::getline(fichier, NouvMot)){
             sizeListMot++;
@@ -145,6 +149,7 @@ int fin2Party(int sizeMot, Historique Historique[], int essaie, bool Win, std::s
         std::cout<<"DOMAGE :C le mot a trouver etais "<<MotCacher<<std::endl;
     }
 
+    std::cin.ignore();
     std::cout<<"Rejouer ?\n1- oui\n0- non \n";
     std::cin>>retour;
     
@@ -154,6 +159,19 @@ int fin2Party(int sizeMot, Historique Historique[], int essaie, bool Win, std::s
     std::system("cls");
     return retour;
 
+}
+int replay(){
+    int retour;
+    std::cin.ignore();
+    std::cout<<"Rejouer ?\n1- oui\n0- non \n";
+    std::cin>>retour;
+    
+    std::cin.ignore();
+    if(retour != 1){
+        retour = 0;
+    }
+    std::system("cls");
+    return retour;
 }
 int main() {
     std::string MotCacher = genererMot();
@@ -173,5 +191,9 @@ int main() {
         occurence(MotCacher, sizeMot, nombreLettre);
         placeLettre(MotCacher, essaie, sizeMot, Historique, nombreLettre);
     }
-    return fin2Party(sizeMot, Historique, essaie, Win, MotCacher);
+    fin2Party(sizeMot, Historique, essaie, Win, MotCacher);
+    if(replay()){
+        return main();
+    }
+    return 0;
 }
