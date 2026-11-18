@@ -16,6 +16,10 @@ void initTab(char tab[],int nb){
 	}
 }
 
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> bcf2756c6751cedfb9db24300341df12c396a9fc
 void affichageTab(char tab[],int nb, Player p1, Player p2){
 	//la marge
 	std::string marge=" ";
@@ -42,6 +46,7 @@ void affichageTab(char tab[],int nb, Player p1, Player p2){
 	for(int i=0;i<nb*nb;i++){
 		if((i)%nb==0){
 			std::cout<<std::endl;
+<<<<<<< HEAD
 			//affichage des numéros de ligne
 			if(nb>9){
 				if(i/nb+1<=9){
@@ -62,6 +67,20 @@ void affichageTab(char tab[],int nb, Player p1, Player p2){
 		}else{
 			std::cout<<tab[i]<<' ';
 		}
+=======
+			//affichage des numéros de colonne
+			std::cout<<(i/nb+1)<<' ';
+		}
+
+		if(tab[i] == 'X'){
+			std::cout<<p1.color<<tab[i]<<"\033[0m ";
+		}else if (tab[i] == 'O'){
+			std::cout<<p2.color<<tab[i]<<"\033[0m ";
+		}else{
+			std::cout<<tab[i]<<' ';
+		}
+		
+>>>>>>> bcf2756c6751cedfb9db24300341df12c396a9fc
 	}
 }
 

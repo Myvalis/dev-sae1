@@ -2,7 +2,12 @@
 #include <cstdlib>
 #include <string>
 
-/*--- Struct ---*/
+#include "infoPlayer.h"
+#include "tic_tac_toe_stack.h"
+
+/****   créé par Emma    ****/
+
+/*--- Struct de jeux ---*/
 //information sur les pion
 struct pion{
     char couleur;
@@ -54,7 +59,7 @@ void initPlayer(int Psize, player &p1, player &p2){
 /*--- recuperation des information du jeux ---*/
 //demande à l'utilisateur la taille de la grille.
 void setTailleGrille(int &valeur){
-    std::cout<<"taille du de la grille : ";
+    std::cout<<"taille de la grille : ";
     std::cin>>valeur;
     std::system("cls");
     if (valeur < 2){
@@ -80,71 +85,15 @@ void setAlign(int &align, int Psize){
 }
 
 /*--- recuperation des information des joueurs ---*/
-//assigner un nom
-void setPlayerName(player &p1, player &p2, int equipe){
-    std::string name;
-    for(int i=0; i<2; i++){
-        std::cout<<"nom joueur "<<equipe+1<<": \n";
-        std::cin>>name;
-        if(equipe == 1){
-            p2.equipe=equipe;
-            p2.nom=name;
-        }else{
-            p1.equipe=equipe;
-            p1.nom=name;
-        }
-        equipe =true;
-    }
-}
-//assigner une couleurs
-void setColorplayer(player &p, int chColor){
-    switch (chColor) {
-        case 1:
-            p.couleur="\033[31m";
-        break;
-        case 2:
-            p.couleur="\033[32m";
-        break;
-        case 3:
-            p.couleur="\033[33m";
-        break;
-        case 4:
-            p.couleur="\033[34m";
-        break;
-        case 5:
-            p.couleur="\033[35m";
-        break;
-        case 6:
-            p.couleur="\033[36m";
-        break;
-        default:
-            p.couleur="\033[0m";
-        break;
-    }
-}
-//choix de la couleurs
-void selectColorPlayer(player &p1, player &p2){
-    int chColor=0;
-    for(int i=0; i<2; i++){
-        std::system("cls");
-        std::cout<<"0.Blanc\n1.\033[31mRouge\033[0m\n2.\033[32mVert\033[0m\n3.\033[33mJaune\033[0m\n";
-        std::cout<<"4.\033[34mBleu\033[0m\n5.\033[35mMagenta\033[0m\n6.\033[36mCyan\033[0m\n";
-        if (i==0)
-        {
-            std::cout<<p1.nom<<" quel couleur veux tu prendre ? :\n";
-            std::cin>>chColor;
-            setColorplayer(p1, chColor);
-        }else{
-            std::cout<<p2.nom<<" quel couleur veux tu prendre ? :\n";
-            std::cin>>chColor;
-            setColorplayer(p2, chColor);
-        }
-        std::system("cls");
-    } 
+//recupe donnée des joueur;
+void setDataplayer(player & p, Player imp){
+    p.nom=imp.pseudo;
+    p.couleur=imp.color;
 }
 
+
 /*--- Affichage du jeux ---*/
-//afficher la grille
+//afficher la grilles
 void afficheGrille(pion *tab[], int size, std::string color[]){
     
     std::cout<<"  ";
@@ -219,7 +168,7 @@ void placerPiece(pion *tab[], int size, int & equipe, player &p1, player &p2){
     PlayAction(x, y, nivpion);
     nivpion -= 1;
     if(x >= size || y > size || nivpion > 2 || restpiece(p1, p2, nivpion, equipe)){
-        std::cout<<"le pion ne peux pas etre posse\n";
+        std::cout<<"le pion ne peux pas etre pose\n";
     }else{
         if((tab[y][x].niv < nivpion)){
             tab[y][x].niv=nivpion;
@@ -254,33 +203,57 @@ bool matchNull(player p1, player p2){
 //detecter si un des deux joueurs on alignier asser de point
 bool victoire(int psize, pion *tab[], int aligne, bool &equipeWin, int equipe){
     int nPAlign=0;
-    //horizontal
+    
     for(int y=0; y< psize; y++){
         for(int x=0; x< psize; x++){
-            if(tab[y][x].equipe == equipe){
-                nPAlign ++;
-                if(nPAlign == aligne ){
-                    equipeWin = equipe;
-                    return true;
+            //horizontal
+            for(int horiz=0; horiz < aligne; horiz++){
+                if((((x+horiz) < psize))&& (tab[y][x+horiz].equipe == equipe)){
+                    nPAlign ++;
+                    if(nPAlign == aligne ){
+                     equipeWin = equipe;
+                        return true;
+                    }
+                }else{
+                    nPAlign = 0;
                 }
-            }else{
-                nPAlign = 0;
-            }
-        }
-    }
-    //vertical
-    nPAlign = 0;
-    for(int x=0; x< psize; x++){
-        for(int y=0; y< psize; y++){
-            if(tab[y][x].equipe == equipe){
-                nPAlign ++;
-                if(nPAlign == aligne ){
-                    equipeWin = equipe;
-                    return true;
+            }nPAlign = 0;
+            //vertical
+            for(int verti=0; verti < aligne; verti++){
+                if((((y+verti) < psize)) && tab[y+verti][x].equipe == equipe){
+                    nPAlign ++;
+                    if(nPAlign == aligne ){
+                     equipeWin = equipe;
+                        return true;
+                    }
+                }else{
+                    nPAlign = 0;
                 }
-            }else{
-                nPAlign = 0;
-            }
+            }nPAlign = 0;
+            //Diagonal left
+            for(int Diagl=0; Diagl < aligne; Diagl++){
+                if((((x+Diagl) < psize) && ((y+Diagl) < psize)) && tab[y+Diagl][x+Diagl].equipe == equipe){
+                    nPAlign ++;
+                    if(nPAlign == aligne ){
+                     equipeWin = equipe;
+                        return true;
+                    }
+                }else{
+                    nPAlign = 0;
+                }
+            }nPAlign = 0;
+            //Diagonal Right
+            for(int Diagl=0; Diagl < aligne; Diagl++){
+                if(((((psize-1)-(x+Diagl)) > 0) && ((y+Diagl) < psize)) && (tab[y+Diagl][(psize-1)-(x+Diagl)].equipe == equipe)){
+                    nPAlign ++;
+                    if(nPAlign == aligne ){
+                     equipeWin = equipe;
+                        return true;
+                    }
+                }else{
+                    nPAlign = 0;
+                }
+            }nPAlign = 0;
         }
     }
     return false;
@@ -305,8 +278,41 @@ bool fin2Parti(player p1, player p2, int psize, pion *tab[], int aligne, bool &e
 
     return fin;
 }
+void giveWin(Player & imp1, Player & imp2, bool equipeWin){
+    if(equipeWin){
+        imp2.win+=1;
+    }else{
+        imp1.win+=1;
+    }
+}
+int end(Player & imp1, Player & imp2, bool equipeWin, pion *tab[], int size){
+    std::string color[3]={imp1.color, imp2.color, "\033[0m"};
+    int retour;
 
-int main(){
+    giveWin(imp1, imp2, equipeWin);
+    afficheGrille(tab, size, color);
+    
+    std::cin.ignore();
+    std::cout<<"Rejouer ?\n1- oui\n0- non \n";
+    std::cin>>retour;
+    
+    if(retour != 1){
+        retour = 0;
+    }
+    std::system("cls");
+    return retour;
+}
+
+void ClearTab(pion *tab[], int psize){
+    for(int i=psize-1; i>=0; i-- ){
+        for(int j=psize-1; j>=0; j-- ){
+            delete &tab[i][j];
+        }
+        delete[] tab[i];
+    }
+}
+void ticTacToeStack(Player & imp1, Player & imp2){
+    
     player p1, p2;
     bool equipeWin;
     int equipe= 0;
@@ -320,8 +326,8 @@ int main(){
 
     
     /*--- recuperation des information des joueurs ---*/
-    setPlayerName(p1 , p2, equipe);
-    selectColorPlayer(p1, p2);
+    setDataplayer(p1, imp1);
+    setDataplayer(p2, imp2);
 
     /*--- Initialisation du jeux ---*/
     initPlayer(Psize, p1, p2);
@@ -332,10 +338,10 @@ int main(){
         placerPiece(tab, Psize, equipe, p1, p2);
         
     }
-
     
-
-
-    delete[] *tab;
-    return 0;
+    if(end(imp1, imp2, equipeWin, tab, Psize) == 1){
+        ClearTab(tab, Psize);
+        ticTacToeStack(imp1, imp2);
+    }
+    ClearTab(tab, Psize);   
 }
