@@ -1,11 +1,14 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "infoPlayer.h"
+#include "othello.h"
+
 void initTab(char tab[],int nb){
 	for(int i=0;i<nb*nb;i++){
-		if((i==28)||(i==35)){
+		if((i==((nb/2-1)*nb+nb/2))||(i==(nb/2*nb+nb/2-1))){
 			tab[i]='X';
-		}else if((i==27)||(i==36)){
+		}else if((i==((nb/2-1)*nb+nb/2-1))||(i==(nb/2*nb+nb/2))){
 			tab[i]='O';
 		}else{
 			tab[i]='.';
@@ -13,19 +16,52 @@ void initTab(char tab[],int nb){
 	}
 }
 
-void affichageTab(char tab[],int nb){
+void affichageTab(char tab[],int nb, Player p1, Player p2){
 	//la marge
+	std::string marge=" ";
+	if(nb>9){
+		marge="  ";
+	}else if(nb>99){
+		marge="   ";
+	}
 	std::cout<<"  ";
 	for(int i=0;i<nb;i++){
-		std::cout<<(i+1)<<' ';
+		//affichage des numéros de colonne
+		if(nb>9){
+			if((i+1)<=9){
+				std::cout<<(i+1)<<"  ";
+			}else if((i+1)<=99){
+				std::cout<<(i+1)<<' ';
+			}else{
+			std::cout<<(i+1);
+			}
+		}else{
+			std::cout<<(i+1)<<marge;
+		}
 	}
 	for(int i=0;i<nb*nb;i++){
 		if((i)%nb==0){
 			std::cout<<std::endl;
-			//affichage des numéros de colonne
-			std::cout<<(i/nb+1)<<' ';
+			//affichage des numéros de ligne
+			if(nb>9){
+				if(i/nb+1<=9){
+					std::cout<<(i/nb+1)<<"  ";
+				}else if(i/nb+1<=99){
+					std::cout<<(i/nb+1)<<' ';
+				}else{
+				std::cout<<(i/nb+1);
+				}
+			}else{
+				std::cout<<(i/nb+1)<<marge;
+			}
 		}
-		std::cout<<tab[i]<<' ';
+		if(tab[i] == 'X'){
+			std::cout<<p1.color<<tab[i]<<"\033[0m ";
+		}else if (tab[i] == 'O'){
+			std::cout<<p2.color<<tab[i]<<"\033[0m ";
+		}else{
+			std::cout<<tab[i]<<' ';
+		}
 	}
 }
 
@@ -131,28 +167,33 @@ bool adjacence(char tab[],int nb,int ipion,char symbole){
 	if(tab[ipion]!='.'){
 		return false;
 	}
-	int pas[8]={1,-1,8,-8,9,-9,7,-7};
-	for(int k=0;k<8;k++){
+	int pas[8]={1,-1,nb,-nb,nb+1,-nb-1,nb-1,-nb+1};
+	for(int k=0;k<nb;k++){
 		int i=ipion;
 		int compte=0;
-		while(true){
+		bool boucle=true;
+		while(boucle){
 			int suivant=i+pas[k];
 			//écart de colonne entre deux cases consécutives : plus de 1 = on a changé de bord
 			int dcol=suivant%nb-i%nb;
 			if(dcol<0){
+				//valeur absolue de dcol
 				dcol=-dcol;
 			}
 			if((suivant<0)||(suivant>=nb*nb)||(dcol>1)){
+				boucle=false;
 				break;
 			}
 			i=suivant;
 			if(tab[i]=='.'){
+				boucle=false;
 				break;
 			}
 			if(tab[i]==symbole){
 				if(compte>0){
 					return true;
 				}
+				boucle=false;
 				break;
 			}
 			compte++;
@@ -184,7 +225,7 @@ bool veriFin(char tab[],int nb){
 	return true;
 }
 
-void victoire(char tab[],int nb){
+void victoire(char tab[],int nb, Player & p1, Player & p2){
 	int X=0,O=0;
 	for(int i=0;i<nb*nb;i++){
 		if(tab[i]=='X'){
@@ -193,11 +234,15 @@ void victoire(char tab[],int nb){
 			O++;
 		}
 	}
-	std::cout<<"X:"<<X<<" O:"<<O<<std::endl;
+	std::cout<<p1.color<<"X\033[0m:"<<X<<p2.color<<" O\033[0m:"<<O<<std::endl;
 	if(X>O){
-		std::cout<<"Les X ont gagne";
+		p1.win+=1;
+		std::cout<<p1.color<<p1.pseudo<<"\033[0m a gagne\n";
+	}else if(O>X){
+		p2.win+=1;
+		std::cout<<p2.color<<p2.pseudo<<"\033[0m a gagne\n";
 	}else{
-		std::cout<<"Les O ont gagne";
+		std::cout<<"egalite\n";
 	}
 }
 
@@ -208,8 +253,21 @@ bool jeuPossible(char tab[],int nb,char symbole){
 	}
 	return possible;
 }
+int end(){
+    int retour;
 
-int main(){
+	std::cin.ignore();
+    std::cout<<"Rejouer ?\n1- oui\n0- non \n";
+    std::cin>>retour;
+    
+    if(retour != 1){
+        retour = 0;
+    }
+    std::system("cls");
+    return retour;
+}
+
+void othello(Player & p1, Player & p2){
 	//nb est égal au nombre de colonne et de ligne
 	//on le met au carré pour optenir le nombre de case
 	char currentchar='X';
@@ -221,9 +279,13 @@ int main(){
 	while(fin==false){
 		//clear la console
 		std::system("cls");
-		affichageTab(tab,nb);
+		affichageTab(tab,nb,p1,p2);
 		std::cout<<std::endl;
-		std::cout<<"Les "<<currentchar<<" jouent, entrez les coordonnees:"<<std::endl;
+		if(currentchar == 'X'){
+			std::cout<<p1.color<<p1.pseudo<<"\033[0m,vous etes les "<<currentchar<<" entrez les coordonnees:"<<std::endl;
+		}else{
+			std::cout<<p2.color<<p2.pseudo<<"\033[0m,vous etes les "<<currentchar<<" entrez les coordonnees:"<<std::endl;
+		}
 		std::cin>>x;
 		std::cin>>y;
 		//pour arreter le programe sans finir la partie
@@ -251,6 +313,11 @@ int main(){
 			fin=true;
 		}
 	}
-	victoire(tab,nb);
+	std::system("cls");
+	affichageTab(tab,nb,p1,p2);
+	victoire(tab,nb, p1, p2);
+	if(end() == 1){
+        othello(p1, p2);
+    }
 }
 
