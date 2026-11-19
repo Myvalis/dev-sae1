@@ -321,4 +321,4 @@ void othello(Player & p1, Player & p2){
         othello(p1, p2);
     }
 }
-
+//ntm
