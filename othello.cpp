@@ -6,9 +6,9 @@
 
 void initTab(char tab[],int nb){
 	for(int i=0;i<nb*nb;i++){
-		if((i==28)||(i==35)){
+		if((i==((nb/2-1)*nb+nb/2))||(i==(nb/2*nb+nb/2-1))){
 			tab[i]='X';
-		}else if((i==27)||(i==36)){
+		}else if((i==((nb/2-1)*nb+nb/2-1))||(i==(nb/2*nb+nb/2))){
 			tab[i]='O';
 		}else{
 			tab[i]='.';
@@ -16,20 +16,46 @@ void initTab(char tab[],int nb){
 	}
 }
 
- 
+
 void affichageTab(char tab[],int nb, Player p1, Player p2){
 	//la marge
+	std::string marge=" ";
+	if(nb>9){
+		marge="  ";
+	}else if(nb>99){
+		marge="   ";
+	}
 	std::cout<<"  ";
 	for(int i=0;i<nb;i++){
-		std::cout<<(i+1)<<' ';
+		//affichage des numéros de colonne
+		if(nb>9){
+			if((i+1)<=9){
+				std::cout<<(i+1)<<"  ";
+			}else if((i+1)<=99){
+				std::cout<<(i+1)<<' ';
+			}else{
+			std::cout<<(i+1);
+			}
+		}else{
+			std::cout<<(i+1)<<marge;
+		}
 	}
 	for(int i=0;i<nb*nb;i++){
 		if((i)%nb==0){
 			std::cout<<std::endl;
-			//affichage des numéros de colonne
-			std::cout<<(i/nb+1)<<' ';
+			//affichage des numéros de ligne
+			if(nb>9){
+				if(i/nb+1<=9){
+					std::cout<<(i/nb+1)<<"  ";
+				}else if(i/nb+1<=99){
+					std::cout<<(i/nb+1)<<' ';
+				}else{
+				std::cout<<(i/nb+1);
+				}
+			}else{
+				std::cout<<(i/nb+1)<<marge;
+			}
 		}
-
 		if(tab[i] == 'X'){
 			std::cout<<p1.color<<tab[i]<<"\033[0m ";
 		}else if (tab[i] == 'O'){
@@ -37,7 +63,6 @@ void affichageTab(char tab[],int nb, Player p1, Player p2){
 		}else{
 			std::cout<<tab[i]<<' ';
 		}
-		
 	}
 }
 
@@ -143,28 +168,33 @@ bool adjacence(char tab[],int nb,int ipion,char symbole){
 	if(tab[ipion]!='.'){
 		return false;
 	}
-	int pas[8]={1,-1,8,-8,9,-9,7,-7};
-	for(int k=0;k<8;k++){
+	int pas[8]={1,-1,nb,-nb,nb+1,-nb-1,nb-1,-nb+1};
+	for(int k=0;k<nb;k++){
 		int i=ipion;
 		int compte=0;
-		while(true){
+		bool boucle=true;
+		while(boucle){
 			int suivant=i+pas[k];
 			//écart de colonne entre deux cases consécutives : plus de 1 = on a changé de bord
 			int dcol=suivant%nb-i%nb;
 			if(dcol<0){
+				//valeur absolue de dcol
 				dcol=-dcol;
 			}
 			if((suivant<0)||(suivant>=nb*nb)||(dcol>1)){
+				boucle=false;
 				break;
 			}
 			i=suivant;
 			if(tab[i]=='.'){
+				boucle=false;
 				break;
 			}
 			if(tab[i]==symbole){
 				if(compte>0){
 					return true;
 				}
+				boucle=false;
 				break;
 			}
 			compte++;
@@ -242,7 +272,7 @@ void othello(Player & p1, Player & p2){
 	//nb est égal au nombre de colonne et de ligne
 	//on le met au carré pour optenir le nombre de case
 	char currentchar='X';
-	int nb=8;
+	int nb=10;
 	char tab[nb*nb];
 	bool fin=false;
 	int ipion,x,y;

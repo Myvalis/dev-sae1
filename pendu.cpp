@@ -120,16 +120,6 @@ int replay(){
     return retour;
 }
 
-int choixDiff(){
-    int reponse;
-    std::cout<<"Choisissez la difficule: \n 1 : Facile  2 : Difficile"<<std::endl;
-    std::cin>>reponse;
-    if(reponse==1){
-        return 10;
-    }
-    return 7;
-}
-
 int main() {
     std::string DIFFICILE[7] = {"  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========="};
     std::string FACILE[10] = {"       \n       \n       \n       \n       \n       \n=========","      +\n      |\n      |\n      |\n      |\n      |\n=========","  +---+\n      |\n      |\n      |\n      |\n      |\n=========","  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========="};
