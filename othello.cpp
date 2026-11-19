@@ -25,7 +25,8 @@ void affichageTab(char tab[],int nb, Player p1, Player p2){
 	}else if(nb>99){
 		marge="   ";
 	}
-	std::cout<<"  ";
+	std::cout<<" "+marge;
+
 	for(int i=0;i<nb;i++){
 		//affichage des numéros de colonne
 		if(nb>9){
@@ -43,7 +44,7 @@ void affichageTab(char tab[],int nb, Player p1, Player p2){
 	for(int i=0;i<nb*nb;i++){
 		if((i)%nb==0){
 			std::cout<<std::endl;
-			//affichage des numéros de ligne
+			//affichage des numéros de lignes
 			if(nb>9){
 				if(i/nb+1<=9){
 					std::cout<<(i/nb+1)<<"  ";
@@ -57,11 +58,11 @@ void affichageTab(char tab[],int nb, Player p1, Player p2){
 			}
 		}
 		if(tab[i] == 'X'){
-			std::cout<<p1.color<<tab[i]<<"\033[0m ";
+			std::cout<<p1.color<<tab[i]<<"\033[0m"<<marge;
 		}else if (tab[i] == 'O'){
-			std::cout<<p2.color<<tab[i]<<"\033[0m ";
+			std::cout<<p2.color<<tab[i]<<"\033[0m"<<marge;
 		}else{
-			std::cout<<tab[i]<<' ';
+			std::cout<<tab[i]<<marge;
 		}
 	}
 }
@@ -72,20 +73,20 @@ void retourneLigne(char tab[],int idep,int ifin,char symbole){
 	}
 }
 
-void retourneColonne(char tab[],int idep,int ifin,char symbole){
-	for(int i=idep;i<=ifin;i+=8){
+void retourneColonne(char tab[],int idep,int ifin,char symbole,int nb){
+	for(int i=idep;i<=ifin;i+=nb){
 		tab[i]=symbole;
 	}
 }
 
-void retourneDiagonaleGD(char tab[],int idep,int ifin,char symbole){
-	for(int i=idep;i<=ifin;i+=9){
+void retourneDiagonaleGD(char tab[],int idep,int ifin,char symbole,int nb){
+	for(int i=idep;i<=ifin;i+=nb+1){
 		tab[i]=symbole;
 	}
 }
 
-void retourneDiagonaleDG(char tab[],int idep,int ifin,char symbole){
-	for(int i=idep;i<=ifin;i+=7){
+void retourneDiagonaleDG(char tab[],int idep,int ifin,char symbole,int nb){
+	for(int i=idep;i<=ifin;i+=nb-1){
 		tab[i]=symbole;
 	}
 }
@@ -112,50 +113,50 @@ void cascade(char tab[],int nb,int ipion,char symbole){
 			}
 		}
 	}
-	if((ipion+8<nb*nb)&&(tab[ipion+8]!=symbole)){
-		for(int i=ipion+8;(i<nb*nb)&&(tab[i]!='.');i+=8){
+	if((ipion+nb<nb*nb)&&(tab[ipion+nb]!=symbole)){
+		for(int i=ipion+nb;(i<nb*nb)&&(tab[i]!='.');i+=nb){
 			if(tab[i]==symbole){
-				retourneColonne(tab,ipion,i,symbole);
+				retourneColonne(tab,ipion,i,symbole,nb);
 				break;
 			}
 		}
 	}
-	if((ipion-8>=0)&&(tab[ipion-8]!=symbole)){
-		for(int i=ipion-8;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=8){
+	if((ipion-nb>=0)&&(tab[ipion-nb]!=symbole)){
+		for(int i=ipion-nb;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=nb){
 			if(tab[i]==symbole){
-				retourneColonne(tab,i,ipion,symbole);
+				retourneColonne(tab,i,ipion,symbole,nb);
 				break;
 			}
 		}
 	}
-	if((ipion+9<nb*nb)&&(tab[ipion+9]!=symbole)){
-		for(int i=ipion+9;(i<nb*nb)&&(tab[i]!='.');i+=9){
+	if((ipion+nb+1<nb*nb)&&(tab[ipion+nb+1]!=symbole)){
+		for(int i=ipion+nb+1;(i<nb*nb)&&(tab[i]!='.');i+=nb+1){
 			if(tab[i]==symbole){
-				retourneDiagonaleGD(tab,ipion,i,symbole);
+				retourneDiagonaleGD(tab,ipion,i,symbole,nb);
 				break;
 			}
 		}
 	}
-	if((ipion-9>=0)&&(tab[ipion-9]!=symbole)){
-		for(int i=ipion-9;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=9){
+	if((ipion-nb-1>=0)&&(tab[ipion-nb-1]!=symbole)){
+		for(int i=ipion-nb-1;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=nb-1){
 			if(tab[i]==symbole){
-				retourneDiagonaleGD(tab,i,ipion,symbole);
+				retourneDiagonaleGD(tab,i,ipion,symbole,nb);
 				break;
 			}
 		}
 	}
-	if((ipion+7<nb*nb)&&(tab[ipion+7]!=symbole)){
-		for(int i=ipion+7;(i<nb*nb)&&(tab[i]!='.');i+=7){
+	if((ipion+nb-1<nb*nb)&&(tab[ipion+nb-1]!=symbole)){
+		for(int i=ipion+nb-1;(i<nb*nb)&&(tab[i]!='.');i+=nb-1){
 			if(tab[i]==symbole){
-				retourneDiagonaleDG(tab,ipion,i,symbole);
+				retourneDiagonaleDG(tab,ipion,i,symbole,nb);
 				break;
 			}
 		}
 	}
-	if((ipion-7>=0)&&(tab[ipion-7]!=symbole)){
-		for(int i=ipion-7;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=7){
+	if((ipion-nb+1>=0)&&(tab[ipion-nb+1]!=symbole)){
+		for(int i=ipion-nb-1;(i>=0)&&(i<nb*nb)&&(tab[i]!='.');i-=nb-1){
 			if(tab[i]==symbole){
-				retourneDiagonaleDG(tab,i,ipion,symbole);
+				retourneDiagonaleDG(tab,i,ipion,symbole,nb);
 				break;
 			}
 		}
@@ -169,6 +170,7 @@ bool adjacence(char tab[],int nb,int ipion,char symbole){
 		return false;
 	}
 	int pas[8]={1,-1,nb,-nb,nb+1,-nb-1,nb-1,-nb+1};
+	//8 dirrections
 	for(int k=0;k<nb;k++){
 		int i=ipion;
 		int compte=0;
@@ -254,11 +256,17 @@ bool jeuPossible(char tab[],int nb,char symbole){
 	}
 	return possible;
 }
+int changerTaille(){
+	int taille;
+	std::cout<<"Entrez la taille du tableau";
+    std::cin>>taille;
+	return taille;
+}
 int end(){
     int retour;
 
 	std::cin.ignore();
-    std::cout<<"Rejouer ?\n1- oui\n0- non \n";
+    std::cout<<"Rejouer ?\n1- oui\n0- non \n"<<std::endl;
     std::cin>>retour;
     
     if(retour != 1){
@@ -272,7 +280,7 @@ void othello(Player & p1, Player & p2){
 	//nb est égal au nombre de colonne et de ligne
 	//on le met au carré pour optenir le nombre de case
 	char currentchar='X';
-	int nb=10;
+	int nb=changerTaille();
 	char tab[nb*nb];
 	bool fin=false;
 	int ipion,x,y;
@@ -310,9 +318,6 @@ void othello(Player & p1, Player & p2){
 			}
 		}
 		fin=veriFin(tab,nb);
-		if((x==67)&&(y==69)){
-			fin=true;
-		}
 	}
 	std::system("cls");
 	affichageTab(tab,nb,p1,p2);
@@ -321,4 +326,3 @@ void othello(Player & p1, Player & p2){
         othello(p1, p2);
     }
 }
-//ntm
