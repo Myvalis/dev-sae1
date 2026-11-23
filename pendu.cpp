@@ -11,11 +11,7 @@ https://gist.github.com/chrishorton/8510732aa9a80a03c829b09f12e20d9c
 
 std::string trouverMot(){
     srand(time(0));
-<<<<<<< HEAD
-    std::ifstream fichier("./mots.txt");
-=======
     std::ifstream fichier("./listMots/mots.txt");
->>>>>>> bcf2756c6751cedfb9db24300341df12c396a9fc
     if (fichier.is_open()) {
         int t=0,i=0;
         std::string ligne;
@@ -124,24 +120,10 @@ int replay(){
     return retour;
 }
 
-int choixDiff(){
-    int reponse;
-    std::cout<<"Choisissez la difficule: \n 1 : Facile  2 : Difficile"<<std::endl;
-    std::cin>>reponse;
-    if(reponse==1){
-        return 10;
-    }
-    return 7;
-}
-
 int main() {
     std::string DIFFICILE[7] = {"  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========="};
     std::string FACILE[10] = {"       \n       \n       \n       \n       \n       \n=========","      +\n      |\n      |\n      |\n      |\n      |\n=========","  +---+\n      |\n      |\n      |\n      |\n      |\n=========","  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========", "  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========="};
-<<<<<<< HEAD
-    std::string mot,currentmot="";
-=======
     std::string mot,currentmot="",historique="";
->>>>>>> bcf2756c6751cedfb9db24300341df12c396a9fc
     char lettre;
     mot=trouverMot();
     std::string currentMot=mot;
@@ -151,12 +133,6 @@ int main() {
     while(fin!=true){
         std::system("cls");
         if(difficulte==7){
-<<<<<<< HEAD
-            std::cout<<DIFFICILE[pendu]<<std::endl;
-        }else{
-            std::cout<<FACILE[pendu]<<std::endl;
-        }
-=======
             std::cout<<DIFFICILE[pendu]<<" Historique: ";
             for(int i=0; i<historique.length(); i++){
                 std::cout<<historique[i]<<", ";
@@ -169,24 +145,16 @@ int main() {
 
         }
         std::cout<<std::endl;
->>>>>>> bcf2756c6751cedfb9db24300341df12c396a9fc
         std::cout<<currentmot<<std::endl;
         saisitLettre(lettre, historique, currentmot);
         if(verifLettre(lettre,taille,currentmot,mot,historique)==false){
             pendu++;
         }
-<<<<<<< HEAD
-        fin=verifVictoire(taille,currentmot,mot);
-        if(pendu>difficulte-1){
-            fin=true;
-            std::cout<<"Vous etes tout mouru";
-        }
-=======
         fin=verifVictoire(taille,currentmot,mot, pendu, difficulte);
->>>>>>> bcf2756c6751cedfb9db24300341df12c396a9fc
     }
     if(replay()){
         return main();
     }
     return 0;
 }
+//les coin coin mange du pain mais jamais en retard
