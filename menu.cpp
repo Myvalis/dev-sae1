@@ -89,6 +89,7 @@ void affichage(int page){
         std::cout<<"|                      |\n";
         std::cout<<"|"<<texteRGB(175, 238, 238)<<"4- Pendu\033[0m              |\n";
         std::cout<<"|"<<texteRGB(175, 238, 238)<<"5- Wordle\033[0m             |\n";
+        std::cout<<"|"<<texteRGB(175, 238, 238)<<"6- demineur\033[0m           |\n";
         std::cout<<"|                      |\n";
         std::cout<<"+--   \033[32mAutre action\033[0m   --+\n";
         std::cout<<"|                      |\n";
@@ -135,6 +136,9 @@ void action(int & page, char & choix, Player &p1, Player &p2){
             break;
             case '5':
                 system("wordle.exe");
+            break;
+            case '6':
+                system("demineur.exe");
             break;
             case 'p':
                 page = 1;
