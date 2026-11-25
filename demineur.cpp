@@ -56,7 +56,7 @@ void afficheGrille(Case** &Grille, int coll, int lign){
         texteRGB(0,0,0),
         texteRGB(64,64,64)
     };
-    std::system("cls");
+    //std::system("cls");
     std::cout<<" ";
     for(int i=0; i<lign; i++){
         if(i < 10)std::cout<<"   "<<i;
@@ -127,15 +127,19 @@ void coPlay(Case** Grille,int coll, int lign, char & action, int &x, int &y){
     }
 }
 void cascade(Case** &Grille, int coll, int lign, int x, int y){
-    if((x<0 || x>=coll || y<0 || y>=lign) || (Grille[x][y].show || Grille[x][y].flag)) return;
-    Grille[x][y].show = true;
-    if(Grille[x][y].nBombe == 0 && !Grille[x][y].bombe){        
+    if(Grille[x][y].show && (Grille[x][y].nBombe == 0)){
         for(int dx=-1; dx<=1; dx++){
             for(int dy=-1; dy<=1; dy++){
-                if(dx!=0 || dy!=0)cascade(Grille, coll, lign, x+dx, y+dy);
+                int vx = x+dx, vy = y+dy;
+                if(dx !=0 || dy !=0){
+                    if(vx>=0 && vx<coll && vy>=0 && vy<lign && !Grille[vx][vy].show){
+                        Grille[vx][vy].show=true;
+                        cascade(Grille, coll, lign, vx, vy);
+                    }
+                }
             }
         }
-    }
+    }else return;
 }
 void showCase(Case** &Grille, int coll, int lign, int nbMine, bool &start){
     int x, y;
@@ -144,12 +148,18 @@ void showCase(Case** &Grille, int coll, int lign, int nbMine, bool &start){
     coPlay(Grille,coll,lign,action,x,y);
     
     if(action == 's'){
-        if(!start){genMine(Grille, nbMine ,coll, lign, x, y);start =true;}
-        else Grille[x][y].show=true;cascade(Grille, coll, lign, x, y);
+        if(!start){
+            genMine(Grille, nbMine ,coll, lign, x, y);
+            start =true;
+        }
+        Grille[x][y].show=true;
+        cascade(Grille, coll, lign, x, y);
     }else if(action == 'f'){
         Grille[x][y].flag=true;
     }else if(action == 'c'){
         Grille[x][y].flag=false;
+    }else{
+        std::cout<<"Action non possible\n ";
     }
     
 }
